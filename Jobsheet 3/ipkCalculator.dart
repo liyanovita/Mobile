@@ -1,111 +1,163 @@
 import 'dart:io';
 
+class MataKuliah {
+  String nama;
+  int sks;
+  String nilaiHuruf;
+  double nilaiAngka;
+
+  MataKuliah(this.nama, this.sks, this.nilaiHuruf)
+      : nilaiAngka = konversiNilai(nilaiHuruf);
+
+  static double konversiNilai(String huruf) {
+    switch (huruf.toUpperCase()) {
+      case 'A':
+        return 4.0;
+      case 'B':
+        return 3.0;
+      case 'C':
+        return 2.0;
+      case 'D':
+        return 1.0;
+      case 'E':
+        return 0.0;
+      default:
+        return -1.0; // Penanda untuk input salah
+    }
+  }
+}
+
+
+class Semester {
+  int nomor;
+  List<MataKuliah> mataKuliahs = [];
+
+  Semester(this.nomor);
+
+  void tambahMataKuliah(MataKuliah mk) {
+    mataKuliahs.add(mk);
+  }
+
+  int totalSKS() {
+    return mataKuliahs.fold(0, (total, mk) => total + mk.sks);
+  }
+
+  double hitungNR() {
+    double totalNilai = 0;
+    int totalSKS = 0;
+    for (var mk in mataKuliahs) {
+      totalNilai += mk.nilaiAngka * mk.sks;
+      totalSKS += mk.sks;
+    }
+    return totalSKS > 0 ? totalNilai / totalSKS : 0;
+  }
+
+  void tampilkanMataKuliah() {
+    for (var mk in mataKuliahs) {
+      print("${mk.nama.padRight(20)} ${mk.sks} ${mk.nilaiHuruf}");
+    }
+  }
+}
+
 void main() {
   print("==============================================");
   print(" Program Menghitung IPK Mahasiswa");
   print("==============================================");
 
-  // Meminta input jumlah semester
-  int jumlahSemester = 0;
-  while (jumlahSemester < 2 || jumlahSemester > 14) {
-    stdout.write("Masukkan jumlah semester (min. 2, maks. 14): ");
-    String? input = stdin.readLineSync();
-    jumlahSemester = int.tryParse(input ?? '') ?? 0;
-    if (jumlahSemester < 2 || jumlahSemester > 14) {
-      print("Jumlah semester harus antara 2 hingga 14.");
-    }
-  }
+  int jumlahSemester = mintaInputJumlahSemester();
+  List<Semester> semesters = [];
 
-  double totalNilai = 0;
-  int totalSKS = 0;
-  List<String> transkrip = [];
-
-  for (int semester = 1; semester <= jumlahSemester; semester++) {
+  for (int i = 1; i <= jumlahSemester; i++) {
+    Semester semester = Semester(i);
     print("--------------------------------------------");
-    print("Masukkan jumlah mata kuliah semester $semester:");
-    
-    int jumlahMatkul = 0;
-    while (jumlahMatkul < 2) {
-      stdout.write("Masukkan jumlah mata kuliah (min. 2): ");
-      String? input = stdin.readLineSync();
-      jumlahMatkul = int.tryParse(input ?? '') ?? 0;
-      if (jumlahMatkul < 2) {
-        print("Jumlah mata kuliah harus minimal 2.");
-      }
+    print("Masukkan jumlah mata kuliah semester $i:");
+    int jumlahMataKuliah = mintaInputJumlahMataKuliah();
+
+    for (int j = 1; j <= jumlahMataKuliah; j++) {
+      print("Masukkan mata kuliah ke $j:");
+      print("Masukkan nama matkul:");
+      String nama = stdin.readLineSync()!;
+      print("Masukkan jumlah sks matkul:");
+      int sks = mintaInputSKS();
+      String nilaiHuruf = mintaInputNilaiHuruf();
+
+      MataKuliah mk = MataKuliah(nama, sks, nilaiHuruf);
+      semester.tambahMataKuliah(mk);
     }
 
-    int totalSKSSemester = 0;
-    double totalNilaiSemester = 0;
-
-    transkrip.add("Hasil Semester $semester:");
-    for (int i = 1; i <= jumlahMatkul; i++) {
-      print("Masukkan mata kuliah ke $i");
-      stdout.write("Masukkan nama matkul: ");
-      String? namaMatkul = stdin.readLineSync();
-
-      int sks = 0;
-      while (sks < 1 || sks > 24) {
-        stdout.write("Masukkan jumlah SKS matkul (1 - 24): ");
-        String? input = stdin.readLineSync();
-        sks = int.tryParse(input ?? '') ?? 0;
-        if (sks < 1 || sks > 24) {
-          print("Jumlah SKS harus antara 1 hingga 24.");
-        }
-      }
-
-      String nilaiHuruf = '';
-      while (!["A", "B", "C", "D", "E"].contains(nilaiHuruf)) {
-        stdout.write("Masukkan nilai matkul (A/B/C/D/E): ");
-        nilaiHuruf = (stdin.readLineSync() ?? '').toUpperCase().trim(); // Tambahkan pengolahan nilai input
-        if (!["A", "B", "C", "D", "E"].contains(nilaiHuruf)) {
-          print("Nilai huruf harus antara A hingga E.");
-        }
-      }
-
-      double nilaiAngka;
-      switch (nilaiHuruf) {
-        case "A":
-          nilaiAngka = 4;
-          break;
-        case "B":
-          nilaiAngka = 3;
-          break;
-        case "C":
-          nilaiAngka = 2;
-          break;
-        case "D":
-          nilaiAngka = 1;
-          break;
-        default:
-          nilaiAngka = 0;
-      }
-
-      totalNilaiSemester += nilaiAngka * sks;
-      totalSKSSemester += sks;
-
-      // Menyimpan mata kuliah ke dalam transkrip
-      transkrip.add("$namaMatkul - SKS: $sks, Nilai: $nilaiHuruf");
-    }
-
-    // Menghitung NR (Nilai Rata-rata Semester)
-    double nrSemester = totalNilaiSemester / totalSKSSemester;
-    transkrip.add("SKS: $totalSKSSemester, NR: ${nrSemester.toStringAsFixed(2)}\n");
-
-    totalNilai += totalNilaiSemester;
-    totalSKS += totalSKSSemester;
+    semesters.add(semester);
   }
 
-  // Menghitung IPK (Indeks Prestasi Kumulatif)
-  double ipk = totalNilai / totalSKS;
+  tampilkanTranskrip(semesters);
+}
 
-  // Menampilkan transkrip
+int mintaInputJumlahSemester() {
+  while (true) {
+    stdout.write("Masukkan jumlah semester: ");
+    int? jumlahSemester = int.tryParse(stdin.readLineSync()!);
+    if (jumlahSemester != null && jumlahSemester >= 2 && jumlahSemester <= 14) {
+      return jumlahSemester;
+    }
+    print("Jumlah semester tidak valid, masukkan angka antara 2 hingga 14.");
+  }
+}
+
+int mintaInputJumlahMataKuliah() {
+  while (true) {
+    stdout.write("Masukkan jumlah mata kuliah: ");
+    int? jumlahMataKuliah = int.tryParse(stdin.readLineSync()!);
+    if (jumlahMataKuliah != null && jumlahMataKuliah >= 2) {
+      return jumlahMataKuliah;
+    }
+    print("Jumlah mata kuliah minimal 2.");
+  }
+}
+
+int mintaInputSKS() {
+  while (true) {
+    stdout.write("Masukkan jumlah SKS: ");
+    int? sks = int.tryParse(stdin.readLineSync()!);
+    if (sks != null && sks > 0 && sks <= 24) {
+      return sks;
+    }
+    print("Jumlah SKS tidak valid, masukkan angka antara 1 hingga 24.");
+  }
+}
+
+String mintaInputNilaiHuruf() {
+  while (true) {
+    stdout.write("Masukkan nilai matkul (A/B/C/D/E): ");
+    String nilaiHuruf = stdin.readLineSync()!.toUpperCase();
+    if (['A', 'B', 'C', 'D', 'E'].contains(nilaiHuruf)) {
+      return nilaiHuruf;
+    }
+    print("Nilai huruf tidak valid. Masukkan antara A hingga E.");
+  }
+}
+
+void tampilkanTranskrip(List<Semester> semesters) {
   print("==============================================");
   print(" Transkrip Nilai");
   print("==============================================");
-  for (String line in transkrip) {
-    print(line);
+
+  int totalSKS = 0;
+  double totalNilai = 0;
+
+  for (var semester in semesters) {
+    print("Hasil Semester ${semester.nomor}:");
+    print("Mata Kuliah           SKS  Nilai");
+    semester.tampilkanMataKuliah();
+    int semesterSKS = semester.totalSKS();
+    double NR = semester.hitungNR();
+    print("SKS : $semesterSKS");
+    print("NR  : ${NR.toStringAsFixed(2)}");
+    print("--------------------------------------------");
+    totalSKS += semesterSKS;
+    totalNilai += NR * semesterSKS;
   }
-  print("Total SKS: $totalSKS");
-  print("IPK: ${ipk.toStringAsFixed(2)}");
+
+  double IPK = totalSKS > 0 ? totalNilai / totalSKS : 0;
+  print("Total SKS : $totalSKS");
+  print("IPK : ${IPK.toStringAsFixed(2)}");
   print("==============================================");
 }
