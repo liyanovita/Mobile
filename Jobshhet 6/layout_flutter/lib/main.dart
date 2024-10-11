@@ -63,9 +63,7 @@ class MyApp extends StatelessWidget {
         ' di perbatasan Kabupaten Malang dan Kabupaten Blitar dalam wilayah Provinsi Jawa Timur,' 
         'Indonesia. Gunung Buthak terletak berdekatan dengan Gunung Kawi. Tidak diketemukan catatan '
         'sejarah atas erupsi dari Gunung Buthak sampai saat ini. '
-        'Gunung ini berada pada posisi -7,922566˚ dan 112,451688˚ dengan ketinggial 2.868 mdpl(9,409 ft).'
-
-        ' Liya Novitasari 2241760006',
+        'Gunung ini berada pada posisi -7,922566˚ dan 112,451688˚ dengan ketinggial 2.868 mdpl(9,409 ft).',
         softWrap: true, // Teks akan dibungkus otomatis jika terlalu panjang
       ),
     );
@@ -74,7 +72,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter layout demo',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Flutter layout demo'),
+          title: const Text('Flutter Layout Demo'),
         ),
         body: ListView( // Mengubah dari Column ke ListView agar bisa di-scroll jika konten terlalu banyak
           children: [
@@ -88,7 +86,7 @@ class MyApp extends StatelessWidget {
             buttonSection, // Bagian tombol
             textSection,   // Bagian teks
             const Center(
-              child: Text('Hello World'),
+              child: Text('Liya Novitasari 2241760006'),
             ),
           ],
         ),
