@@ -1,0 +1,28 @@
+name: uts_mobile
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/background.jpg
+    - assets/logo.png
+    - assets/profile_picture.png
+    - assets/images/rinjani.jpg
+    - assets/images/bromo.jpeg
+    - assets/images/semeru.jpeg
+
+
