@@ -3,7 +3,7 @@ import '/config/location_helper.dart'; // Assuming you have location helper func
 import '/services/weather_service.dart'; // Assuming you have a weather service
 import '/widgets/weather_card.dart'; // Assuming custom widget for displaying weather info
 import '/widgets/search_field.dart'; // Assuming custom widget for search field
-// import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
